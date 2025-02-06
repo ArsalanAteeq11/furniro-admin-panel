@@ -6,8 +6,8 @@ const UserDetails = () => {
 
   return (
     <div className="p-10 w-full">
-      <h1 className="text-3xl text-gray-400">All Users</h1>
-      <div className='shadow-[0_0_10px_3px_rgba(240,215,134,0.5)] mt-5'>
+      <h1 className="text-2xl text-gray-400">All Users</h1>
+      <div className='shadow-[0_0_10px_3px_rgba(240,215,134,0.5)] mt-3'>
 
         <Table className="w-full ">
           <TableHeader>

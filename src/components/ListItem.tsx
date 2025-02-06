@@ -156,14 +156,14 @@ const ListItem = () => {
 
   return (
     <div className="p-10 w-full  ">
-      <h1 className="text-xl text-gray-400">All Items</h1>
-      <div className="bg-white shadow-lg min-h-[500px] h-full rounded-md p-2 flex flex-col justify-between ">
-        <Table className="w-full mt-5">
+      <h1 className="text-2xl text-gray-400">All Items</h1>
+      <div className="shadow-[0_0_10px_3px_rgba(240,215,134,0.5)] min-h-[500px] h-full rounded-md p-2 flex flex-col justify-between mt-3 ">
+        <Table className="w-full">
           <TableHeader>
             <TableRow>
               <TableHead>Image</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead>Category</TableHead> 
               <TableHead>Price</TableHead>
               <TableHead>Stock</TableHead>
               <TableHead>Rating</TableHead>
