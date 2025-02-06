@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      {
+        protocol: "https",
+        hostname: "cdn-icons-png.flaticon.com", // Add Flaticon hostname here
+      },
     ],
   },
 };
