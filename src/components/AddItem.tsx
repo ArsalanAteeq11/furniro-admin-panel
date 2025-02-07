@@ -13,8 +13,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
-import { client } from "@/sanity/lib/client"; 
+import { Checkbox } from "./ui/checkbox"; 
 import { toast } from "react-toastify";
 
 const AddItem = () => {
@@ -43,6 +42,7 @@ const AddItem = () => {
     isFeatured: false,
     stockLevel: "",
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   console.log("formData",formData)
   const [loading, setLoading] = useState(false)
@@ -56,6 +56,10 @@ const AddItem = () => {
     if (typeof e === "string" && field) {
       // Handle Select Input
       setFormData((prev) => ({ ...prev, [field]: e }));
+      setErrors((prev) => ({
+        ...prev,
+        [field]: "",
+      }));
     } else if (typeof e === "boolean" && field) {
       // Handle Checkbox
       setFormData((prev) => ({ ...prev, [field]: e }));
@@ -68,16 +72,35 @@ const AddItem = () => {
         ...prev,
         [name]: type === "file" ? files?.[0] || null : value,
       }));
+
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
   
-
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.image) newErrors.image = "Image is required";
+    if (!formData.productName.trim()) newErrors.productName = "Product name is required";
+    if (!formData.productDesc.trim()) newErrors.productDesc = "Product description is required";
+     
+  if (formData.productTags.length === 0) newErrors.productTags = "At least one tag is required";
+  if (formData.productSizes.length === 0) newErrors.productSizes = "At least one size is required";
+    if (!formData.productCategory.trim()) newErrors.productCategory = "Product category is required";
+    if (!formData.productPrice.trim()) newErrors.productPrice = "Product price is required";
+    if (!formData.stockLevel.trim()) newErrors.stockLevel = "Stock level is required";
+    if (!formData.rating.trim()) newErrors.rating = "Rating is required";
+    if (!formData.discount.trim()) newErrors.discount = "Discount is required";
+    setErrors(newErrors);
+    
+    return Object.keys(newErrors).length === 0;
+  };
   const handleTagSelect = (tag: string) => {
     if (!formData.productTags.includes(tag)) {
       setFormData((prev) => ({
         ...prev,
         productTags: [...prev.productTags, tag],
       }));
+      setErrors((prev) => ({ ...prev, productTags: "" }));
     }
   };
 
@@ -96,6 +119,8 @@ const AddItem = () => {
         ...prev,
         productSizes: [...prev.productSizes, value],
       }));
+
+      setErrors((prev) => ({ ...prev, productSizes: "" }));
     }
   };
 
@@ -110,10 +135,12 @@ const AddItem = () => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setLoading(true);
   
     try {
       const formDataToSend = new FormData();
+      
   
       if (formData.image) {
         formDataToSend.append("image", formData.image); 
@@ -193,7 +220,9 @@ const AddItem = () => {
           height={150}
           className="cursor-pointer"
           onClick={() => inputRef.current?.click()}
+          
         />
+         {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
       </div>
 
       <div className="flex gap-4 w-full">
@@ -208,6 +237,7 @@ const AddItem = () => {
             onChange={handleChange}
             disabled={loading}
           />
+          {errors.productName && <p className="text-red-500 text-sm">{errors.productName}</p>}
         </div>
         {/* Stock Level */}
         <div className="w-full">
@@ -220,6 +250,7 @@ const AddItem = () => {
             onChange={handleChange}
             disabled={loading}
           />
+          {errors.stockLevel && <p className="text-red-500 text-sm">{errors.stockLevel}</p>}
         </div>
       </div>
 
@@ -239,6 +270,7 @@ const AddItem = () => {
               <SelectItem value="furniture">Furniture</SelectItem>
             </SelectContent>
           </Select>
+          {errors.productCategory && <p className="text-red-500 text-sm">{errors.productCategory}</p>}
         </div>
 
         {/* Product Price */}
@@ -252,6 +284,7 @@ const AddItem = () => {
             onChange={handleChange}
             disabled={loading}
           />
+           {errors.productPrice && <p className="text-red-500 text-sm">{errors.productPrice}</p>}
         </div>
       </div>
 
@@ -296,6 +329,7 @@ const AddItem = () => {
           ))}
         </SelectContent>
       </Select>
+      {errors.productTags && <p className="text-red-500 text-sm">{errors.productTags}</p>}
     </div>
 
       {/* Product Sizes (Multiple Select) */}
@@ -333,6 +367,7 @@ const AddItem = () => {
             ))}
           </SelectContent>
         </Select>
+        {errors.productSizes && <p className="text-red-500 text-sm">{errors.productSizes}</p>}
       </div>
 
       <div className="flex gap-4 w-full">
@@ -349,6 +384,7 @@ const AddItem = () => {
             onChange={handleChange}
             disabled={loading}
           />
+          {errors.rating && <p className="text-red-500 text-sm">{errors.rating}</p>}
         </div>
 
         {/* Discount Percentage */}
@@ -362,6 +398,8 @@ const AddItem = () => {
             onChange={handleChange}
             disabled={loading}
           />
+          {errors.discount && <p className="text-red-500 text-sm">{errors.discount}</p>}
+          
         </div>
       </div>
       {/* Is Featured Product */}
@@ -385,6 +423,8 @@ const AddItem = () => {
           onChange={handleChange}
           disabled={loading}
         />
+        
+        {errors.productDesc && <p className="text-red-500 text-sm">{errors.productDesc}</p>}
       </div>
 
       <Button type="submit" className="w-36 mt-2" disabled={loading}>
@@ -395,3 +435,4 @@ const AddItem = () => {
 };
 
 export default AddItem;
+
